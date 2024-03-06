@@ -29,19 +29,22 @@ const getPlayerChoice = () => {
             : entry.toLowerCase();
 }
 
-// Handle tie
-const tie = (playerSelection, computerSelection) => {
+// play a round of the game
+const playRound = (playerSelection, computerSelection) => {
+    if (playerSelection === null) {
+        return;
+    }
     // If it's not a tie, play a round of the game
-    if (playerSelection !== computerSelection) {
-        return playRound(playerSelection, computerSelection);
+    else if (playerSelection !== computerSelection) {
+        return getWinner(playerSelection, computerSelection);
     } else {
         console.log(`It's a tie! You both chose ${playerSelection}`);
         // Call this function again until the tie breaks
-        return tie(getPlayerChoice(), getComputerChoice());
+        return playRound(getPlayerChoice(), getComputerChoice());
     }
 }
 
-// win conditions to check in the if statement
+// win conditions to check in the if statement of getWinner function
 const winConditions = (playerSelection, computerSelection) => (
     (playerSelection === 'rock' && computerSelection === 'scissors') ||
     (playerSelection === 'paper' && computerSelection === 'rock') ||
@@ -49,7 +52,7 @@ const winConditions = (playerSelection, computerSelection) => (
 )
 
 // A round of the game
-const playRound = (playerSelection, computerSelection) => {
+const getWinner = (playerSelection, computerSelection) => {
     if (winConditions(playerSelection, computerSelection)) {
         // Handle winning
         console.log(`You win! ${playerSelection} beats ${computerSelection}`);
@@ -60,5 +63,35 @@ const playRound = (playerSelection, computerSelection) => {
         return 0;
     }
 }
-// Call the tie function, to check if it's a tie before playing the round
-console.log(tie(getPlayerChoice(), getComputerChoice()));
+
+// Play a game of five rounds
+const playGame = (playerSelection, computerSelection) => {
+    let numberOfRounds = 0;
+    let score = 0;
+    for (let i = 0; i < 5; i++) {
+        // Check returned value from playRound function
+        if (playerSelection === null) {
+            return;
+        }
+        const result = playRound(playerSelection, computerSelection);
+        if (result == 1) {
+            score++;
+            console.log(`Your score is ${score}`);
+        } else {
+            console.log(`Your score is ${score}`)
+        }
+        numberOfRounds++;
+        console.log(`Number of rounds played = ${numberOfRounds}`);
+        // Reset player and computer choices
+        playerSelection = getPlayerChoice();
+        computerSelection = getComputerChoice();
+    }
+    console.log(`Game over! Your total score is ${score}/5`);
+    if (score >=3) {
+        console.log('You won the game');
+    } else {
+        console.log('You lost the game!');
+    }
+}
+// Call the playGame function
+playGame(getPlayerChoice(), getComputerChoice());
