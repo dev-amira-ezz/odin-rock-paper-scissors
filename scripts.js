@@ -50,38 +50,54 @@ const getWinner = (playerSelection, computerSelection) => {
     }
 }
 
-const showFinalScore = (score) => {
-    console.log(`Game over! Your total score is ${score}/5`);
-    if (score >= 3) {
-        console.log('You won the game');
-    } else {
-        console.log('You lost the game!');
-    }
-}
+// Add event listeners to buttons
+document.querySelector('#rock').addEventListener('click', ()=> {
+    playRound('rock', getComputerChoice());
+});
 
-const showRoundDetails = (score, numberOfRounds) => {
-    console.log(`Your score is ${score}`);
-    console.log(`Number of rounds played = ${numberOfRounds}`);
-}
+document.querySelector('#paper').addEventListener('click', ()=> {
+    playRound('paper', getComputerChoice());
+});
 
-const playGame = (playerSelection, computerSelection) => {
-    let numberOfRounds = 0;
-    let score = 0;
-    for (let i = 0; i < 5; i++) {
-        if (playerSelection === null) {
-            return;
-        }
-        // In case of the player wins the round
-        const result = playRound(playerSelection, computerSelection);
-        if (result == 1) {
-            score++;
-        }
-        numberOfRounds++;
-        showRoundDetails(score, numberOfRounds);
-        // Reset data to start new round with fresh data
-        playerSelection = getPlayerChoice();
-        computerSelection = getComputerChoice();
-    }
-    showFinalScore(score);
-}
-playGame(getPlayerChoice(), getComputerChoice());
+document.querySelector('#scissors').addEventListener('click', ()=> {
+    playRound('scissors', getComputerChoice());
+});
+
+
+playRound(getPlayerChoice(), getComputerChoice());
+
+// const showFinalScore = (score) => {
+//     console.log(`Game over! Your total score is ${score}/5`);
+//     if (score >= 3) {
+//         console.log('You won the game');
+//     } else {
+//         console.log('You lost the game!');
+//     }
+// }
+
+// const showRoundDetails = (score, numberOfRounds) => {
+//     console.log(`Your score is ${score}`);
+//     console.log(`Number of rounds played = ${numberOfRounds}`);
+// }
+
+// const playGame = (playerSelection, computerSelection) => {
+//     let numberOfRounds = 0;
+//     let score = 0;
+//     for (let i = 0; i < 5; i++) {
+//         if (playerSelection === null) {
+//             return;
+//         }
+//         // In case of the player wins the round
+//         const result = playRound(playerSelection, computerSelection);
+//         if (result == 1) {
+//             score++;
+//         }
+//         numberOfRounds++;
+//         showRoundDetails(score, numberOfRounds);
+//         // Reset data to start new round with fresh data
+//         playerSelection = getPlayerChoice();
+//         computerSelection = getComputerChoice();
+//     }
+//     showFinalScore(score);
+// }
+// playGame(getPlayerChoice(), getComputerChoice());
