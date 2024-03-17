@@ -1,70 +1,50 @@
-const getChoices = () => ['rock', 'paper', 'scissors'];
-
-const random = (max) => Math.floor(Math.random() * max);
-
-const getComputerChoice = () => {
-    const choices = getChoices();
-    return choices[random(choices.length)];
-}
-
-const getEntry = () => prompt(
-    `Please enter your choice: 'rock', 'paper' or 'scissors'`
-);
-
-// handle user cancellation and wrong entries
-const getPlayerChoice = () => {
-    const entry = getEntry();
-    return entry === null
-        ? (console.log('Game aborted by user!'), null)
-        : !getChoices().includes(entry.toLowerCase())
-            ? getPlayerChoice()
-            : entry.toLowerCase();
-}
-
-// Play a round. If it's a tie, ask for another user entry
-const playRound = (playerSelection, computerSelection) => {
-    if (playerSelection === null) {
-        return;
-    } else if (playerSelection !== computerSelection) {
-        return getWinner(playerSelection, computerSelection);
-    } else {
-        console.log(`It's a tie! You both chose ${playerSelection}`);
-        return playRound(getPlayerChoice(), getComputerChoice());
-    }
-}
-
-// Conditions used by the if statement to determine the winner
-const winConditions = (playerSelection, computerSelection) => (
-    (playerSelection === 'rock' && computerSelection === 'scissors') ||
-    (playerSelection === 'paper' && computerSelection === 'rock') ||
-    (playerSelection === 'scissors' && computerSelection === 'paper')
-);
-
-const getWinner = (playerSelection, computerSelection) => {
-    if (winConditions(playerSelection, computerSelection)) {
-        console.log(`You win! ${playerSelection} beats ${computerSelection}`);
-        return 1;
-    } else {
-        console.log(`You lose! ${computerSelection} beats ${playerSelection}`);
-        return 0;
-    }
-}
+// Array of choices
+const choices = ['rock', 'paper', 'scissors'];
 
 // Add event listeners to buttons
-document.querySelector('#rock').addEventListener('click', ()=> {
-    playRound('rock', getComputerChoice());
-});
+choices.forEach(choice => {
+    document.querySelector(`#${choice}`).addEventListener('click', () => {
+        playRound(choice, choices[Math.floor(Math.random() * choices.length)]);
+    });
+})
 
-document.querySelector('#paper').addEventListener('click', ()=> {
-    playRound('paper', getComputerChoice());
-});
+// Display round result to the user
+const displayResult = (result) => {
+    // Select the div that the paragraph will attach to
+    const results = document.querySelector('#results');
 
-document.querySelector('#scissors').addEventListener('click', ()=> {
-    playRound('scissors', getComputerChoice());
-});
+    // If paragraph not created before, create it
+    let roundResult = document.querySelector('#roundResult');
+    if (roundResult === null) {
+        roundResult = document.createElement('p');
+        roundResult.setAttribute('id', 'roundResult');
+    }
 
+    // Add the result passed from the playRound function
+    roundResult.textContent = result;
 
-playRound(getPlayerChoice(), getComputerChoice());
+    // Append the paragraph to the results div
+    results.appendChild(roundResult);
+}
+
+// Play a round
+const playRound = (playerSelection, computerSelection) => {
+    // if player and computer choices are different
+    if (playerSelection !== computerSelection) {
+        // Conditions when the player wins
+        if ((playerSelection === 'rock' && computerSelection === 'scissors')
+            || (playerSelection === 'paper' && computerSelection === 'rock')
+            || (playerSelection === 'scissors' && computerSelection === 'paper')) {
+            displayResult(`You win! ${playerSelection} beats ${computerSelection}`);
+            // When the player loses
+        } else {
+            displayResult(`You lose! ${computerSelection} beats ${playerSelection}`);
+        }
+        // If it's a tie (both player and computer chose the same thing)
+    } else {
+        displayResult(`It's a tie! You both chose ${playerSelection}`);
+    }
+}
 
 // const showFinalScore = (score) => {
 //     console.log(`Game over! Your total score is ${score}/5`);
@@ -96,8 +76,8 @@ playRound(getPlayerChoice(), getComputerChoice());
 //         showRoundDetails(score, numberOfRounds);
 //         // Reset data to start new round with fresh data
 //         playerSelection = getPlayerChoice();
-//         computerSelection = getComputerChoice();
+//         computerSelection = computerChoice;
 //     }
 //     showFinalScore(score);
 // }
-// playGame(getPlayerChoice(), getComputerChoice());
+// playGame(getPlayerChoice(), computerChoice);
