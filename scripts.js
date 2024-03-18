@@ -6,7 +6,7 @@ choices.forEach(choice => {
     document.querySelector(`#${choice}`).addEventListener('click', () => {
         playRound(choice, choices[Math.floor(Math.random() * choices.length)]);
     });
-})
+});
 
 let playerScore = 0;
 let computerScore = 0;
@@ -24,7 +24,11 @@ const createNode = (nodeName) => {
 
 const displayRoundResult = (result, playerSelection, computerSelection) => {
     const results = document.querySelector('#results');
-
+        // Clear all the content of the results div
+        while (results.firstChild) {
+            results.removeChild(results.firstChild);
+        }
+    
     // A paragraph to display round result
     let roundResult = createNode('roundResult');
     if (result == 'tie') {
@@ -65,5 +69,24 @@ const playRound = (playerSelection, computerSelection) => {
         computerScore++;
         displayRoundResult('lose', playerSelection, computerSelection);
     }
+    if (playerScore >=3 || computerScore >=3 || numberOfRounds >=5) {
+        endGame();
+    }
+}
 
+// Final game result
+const endGame = () => {
+    const results = document.querySelector('#results');
+   let finalScore = createNode('finalScore');
+   if (playerScore>computerScore) {
+    finalScore.textContent = 'Congratulations! You win the game!';
+   } else {
+    finalScore.textContent = 'You lose the game! Better luck next time.';
+   }
+   results.appendChild(finalScore);
+   playerScore=0;
+   computerScore=0;
+   choices.forEach(choice => {
+    document.querySelector(`#${choice}`).disabled = true;
+    });
 }
