@@ -13,10 +13,10 @@ let computerScore = 0;
 let numberOfRounds = 0;
 
 // Check if the node occurs and if not, create one
-const createNode = (nodeName) => {
+const createNode = (nodeName, nodeType) => {
     let node = document.querySelector(`#${nodeName}`);
     if (node === null) {
-        node = document.createElement('p');
+        node = document.createElement(nodeType);
         node.setAttribute('id', `#${nodeName}`);
     }
     return node;
@@ -30,9 +30,12 @@ const resetResults = (results) => {
 const displayRoundResult = (result, playerSelection, computerSelection) => {
 
     resetResults(document.querySelector('#results'));
-    const results = createNode('results');
+    const results = document.querySelector('#results');
+    let scoreTitle = createNode('scoreTitle', 'h2');
+    scoreTitle.textContent = 'Score';
+    results.appendChild(scoreTitle);
     // A paragraph to display round result
-    let roundResult = createNode('roundResult');
+    let roundResult = createNode('roundResult', 'p');
     if (result == 'tie') {
         roundResult.textContent = `It's a tie! You both chose ${playerSelection}.`;
     } else if (result == 'win') {
@@ -43,13 +46,13 @@ const displayRoundResult = (result, playerSelection, computerSelection) => {
     results.appendChild(roundResult);
 
     // A paragraph to display round score
-    let roundScore = createNode('roundScore');
+    let roundScore = createNode('roundScore', 'p');
     roundScore.textContent = `Your score is ${playerScore}/5. The computer's score is ${computerScore}/5.`;
     results.appendChild(roundScore);
 
 
     // A paragraph to display number of rounds played
-    let roundCount = createNode('roundCount')
+    let roundCount = createNode('roundCount', 'p')
     roundCount.textContent = `You played ${numberOfRounds} of 5 rounds.`;
     results.appendChild(roundCount);
 }
@@ -78,7 +81,7 @@ const playRound = (playerSelection, computerSelection) => {
 
 // Final game result
 const endGame = () => {
-    const finalScore = createNode('finalScore');
+    const finalScore = createNode('finalScore', 'p');
     if (playerScore > computerScore) {
         finalScore.textContent = 'Congratulations! You win the game!';
     } else if (playerScore === computerScore) {
@@ -86,21 +89,26 @@ const endGame = () => {
     } else {
         finalScore.textContent = 'You lose the game! Better luck next time.';
     }
+    finalScore.style.color = 'red';
+    finalScore.style.fontSize = '24px';
     results.appendChild(finalScore);
-    // Reset game data
-    playerScore = 0;
-    computerScore = 0;
-    numberOfRounds = 0;
+    
     // Disable choice buttons
     choices.forEach(choice => {
         document.querySelector(`#${choice}`).disabled = true;
     });
+    document.querySelector('#select').textContent = '';
 }
 
 // Start a new game
 document.querySelector('#newGame').addEventListener('click', () => {
+    // Reset game data
+    playerScore = 0;
+    computerScore = 0;
+    numberOfRounds = 0;
     resetResults(document.querySelector('#results'));
     choices.forEach(choice => {
         document.querySelector(`#${choice}`).disabled = false;
     });
+    document.querySelector('#select').textContent = 'Please choose one of the three options';
 })
