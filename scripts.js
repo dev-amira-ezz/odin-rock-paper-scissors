@@ -8,76 +8,66 @@ choices.forEach(choice => {
     });
 })
 
-// Display round result to the user
-const displayResult = (result) => {
-    // Select the div that the paragraph will attach to
+let playerScore = 0;
+let computerScore = 0;
+let numberOfRounds = 0;
+
+const displayRoundResult = (result, playerSelection, computerSelection) => {
     const results = document.querySelector('#results');
 
-    // If paragraph not created before, create it
+    // A paragraph to display round result
     let roundResult = document.querySelector('#roundResult');
     if (roundResult === null) {
         roundResult = document.createElement('p');
         roundResult.setAttribute('id', 'roundResult');
     }
 
-    // Add the result passed from the playRound function
-    roundResult.textContent = result;
-
-    // Append the paragraph to the results div
+    if (result == 'tie') {
+        roundResult.textContent = `It's a tie! You both chose ${playerSelection}.`;
+    } else if (result == 'win') {
+        roundResult.textContent = `You win the round! ${playerSelection} beats ${computerSelection}.`;
+    } else if (result == 'lose') {
+        roundResult.textContent = `You lose the round! ${computerSelection} beats ${playerSelection}.`;
+    }
     results.appendChild(roundResult);
+
+    // A paragraph to display round score
+    let roundScore = document.querySelector('#roundScore');
+    if (roundScore === null) {
+        roundScore = document.createElement('p');
+        roundScore.setAttribute('id', 'roundScore');
+    }
+    roundScore.textContent = `Your score is ${playerScore}/5. The computer's score is ${computerScore}/5.`;
+    results.appendChild(roundScore);
+
+
+    // A paragraph to display number of rounds played
+    let roundCount = document.querySelector('#roundCount');
+    if (roundCount === null) {
+        roundCount = document.createElement('p');
+        roundCount.setAttribute('id', 'roundCount');
+    }
+
+    roundCount.textContent = `You played ${numberOfRounds} of 5 rounds.`;
+    results.appendChild(roundCount);
 }
 
 // Play a round
 const playRound = (playerSelection, computerSelection) => {
-    // if player and computer choices are different
-    if (playerSelection !== computerSelection) {
-        // Conditions when the player wins
-        if ((playerSelection === 'rock' && computerSelection === 'scissors')
-            || (playerSelection === 'paper' && computerSelection === 'rock')
-            || (playerSelection === 'scissors' && computerSelection === 'paper')) {
-            displayResult(`You win! ${playerSelection} beats ${computerSelection}`);
-            // When the player loses
-        } else {
-            displayResult(`You lose! ${computerSelection} beats ${playerSelection}`);
-        }
-        // If it's a tie (both player and computer chose the same thing)
+    numberOfRounds++
+    // A tie
+    if (playerSelection === computerSelection) {
+        displayRoundResult('tie', playerSelection, computerSelection);
+
+    } else if ((playerSelection === 'rock' && computerSelection === 'scissors')
+        || (playerSelection === 'paper' && computerSelection === 'rock')
+        || (playerSelection === 'scissors' && computerSelection === 'paper')) {
+        playerScore++;
+        displayRoundResult('win', playerSelection, computerSelection);
+        // When the player loses
     } else {
-        displayResult(`It's a tie! You both chose ${playerSelection}`);
+        computerScore++;
+        displayRoundResult('lose', playerSelection, computerSelection);
     }
+
 }
-
-// const showFinalScore = (score) => {
-//     console.log(`Game over! Your total score is ${score}/5`);
-//     if (score >= 3) {
-//         console.log('You won the game');
-//     } else {
-//         console.log('You lost the game!');
-//     }
-// }
-
-// const showRoundDetails = (score, numberOfRounds) => {
-//     console.log(`Your score is ${score}`);
-//     console.log(`Number of rounds played = ${numberOfRounds}`);
-// }
-
-// const playGame = (playerSelection, computerSelection) => {
-//     let numberOfRounds = 0;
-//     let score = 0;
-//     for (let i = 0; i < 5; i++) {
-//         if (playerSelection === null) {
-//             return;
-//         }
-//         // In case of the player wins the round
-//         const result = playRound(playerSelection, computerSelection);
-//         if (result == 1) {
-//             score++;
-//         }
-//         numberOfRounds++;
-//         showRoundDetails(score, numberOfRounds);
-//         // Reset data to start new round with fresh data
-//         playerSelection = getPlayerChoice();
-//         computerSelection = computerChoice;
-//     }
-//     showFinalScore(score);
-// }
-// playGame(getPlayerChoice(), computerChoice);
