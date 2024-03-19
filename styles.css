@@ -51,3 +51,11 @@ button:disabled {
     text-align: center;
     padding-top: 5px;
 }
+
+a {
+    color: navy;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 20%;
+    background-color: white;
+}

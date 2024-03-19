@@ -13,11 +13,13 @@ let computerScore = 0;
 let numberOfRounds = 0;
 
 // Check if the node occurs and if not, create one
-const createNode = (nodeName, nodeType) => {
+const createNode = (nodeName, nodeType, content, parent) => {
     let node = document.querySelector(`#${nodeName}`);
     if (node === null) {
         node = document.createElement(nodeType);
         node.setAttribute('id', `#${nodeName}`);
+        node.textContent = content;
+        parent.appendChild(node);
     }
     return node;
 }
@@ -31,30 +33,34 @@ const displayRoundResult = (result, playerSelection, computerSelection) => {
 
     resetResults(document.querySelector('#results'));
     const results = document.querySelector('#results');
-    let scoreTitle = createNode('scoreTitle', 'h2');
-    scoreTitle.textContent = 'Score';
-    results.appendChild(scoreTitle);
+    createNode('scoreTitle', 'h2', 'Score', results);
+
     // A paragraph to display round result
-    let roundResult = createNode('roundResult', 'p');
+    let content = '';
     if (result == 'tie') {
-        roundResult.textContent = `It's a tie! You both chose ${playerSelection}.`;
+        content = `It's a tie! 
+                   You both chose ${playerSelection}.`;
     } else if (result == 'win') {
-        roundResult.textContent = `You win the round! ${playerSelection} beats ${computerSelection}.`;
+        content = `You win the round! 
+                   ${playerSelection} beats ${computerSelection}.`;
     } else if (result == 'lose') {
-        roundResult.textContent = `You lose the round! ${computerSelection} beats ${playerSelection}.`;
+        content = `You lose the round! 
+                   ${computerSelection} beats ${playerSelection}.`;
     }
-    results.appendChild(roundResult);
+    createNode('roundResult', 'p', content, results);
 
     // A paragraph to display round score
-    let roundScore = createNode('roundScore', 'p');
-    roundScore.textContent = `Your score is ${playerScore}/5. The computer's score is ${computerScore}/5.`;
-    results.appendChild(roundScore);
-
+    createNode('roundScore'
+        , 'p'
+        , `Your score is ${playerScore}/5. 
+           The computer's score is ${computerScore}/5.`
+        , results);
 
     // A paragraph to display number of rounds played
-    let roundCount = createNode('roundCount', 'p')
-    roundCount.textContent = `You played ${numberOfRounds} of 5 rounds.`;
-    results.appendChild(roundCount);
+    createNode('roundCount'
+        , 'p'
+        , `You played ${numberOfRounds} of 5 rounds.`
+        , results)
 }
 
 // Play a round
@@ -81,18 +87,18 @@ const playRound = (playerSelection, computerSelection) => {
 
 // Final game result
 const endGame = () => {
-    const finalScore = createNode('finalScore', 'p');
+    let content = '';
+
     if (playerScore > computerScore) {
-        finalScore.textContent = 'Congratulations! You win the game!';
+        content = 'Congratulations! You win the game!';
     } else if (playerScore === computerScore) {
-        finalScore.textContent = `It's a draw! You both got the same score`;
+        content = `It's a draw! You both got the same score`;
     } else {
-        finalScore.textContent = 'You lose the game! Better luck next time.';
+        content = 'You lose the game! Better luck next time.';
     }
+    let finalScore = createNode('finalScore', 'p', content, results);
     finalScore.style.color = 'red';
-    finalScore.style.fontSize = '24px';
-    results.appendChild(finalScore);
-    
+    finalScore.style.fontSize = '28px';
     // Disable choice buttons
     choices.forEach(choice => {
         document.querySelector(`#${choice}`).disabled = true;
@@ -110,5 +116,6 @@ document.querySelector('#newGame').addEventListener('click', () => {
     choices.forEach(choice => {
         document.querySelector(`#${choice}`).disabled = false;
     });
-    document.querySelector('#select').textContent = 'Please choose one of the three options';
+    document.querySelector('#select').textContent =
+        'Please choose one of the three options';
 })
