@@ -1,10 +1,11 @@
+import {Helpers} from '/helpers.js'
 // Array of choices
 const choices = ['rock', 'paper', 'scissors'];
 
 // Add event listeners to buttons
 choices.forEach(choice => {
     document.querySelector(`#${choice}`).addEventListener('click', () => {
-        playRound(choice, choices[Math.floor(Math.random() * choices.length)]);
+        playRound(choice, choices[Helpers.random(choices.length)]);
     });
 });
 
@@ -12,28 +13,10 @@ let playerScore = 0;
 let computerScore = 0;
 let numberOfRounds = 0;
 
-// Check if the node occurs and if not, create one
-const createNode = (nodeName, nodeType, content, parent) => {
-    let node = document.querySelector(`#${nodeName}`);
-    if (node === null) {
-        node = document.createElement(nodeType);
-        node.setAttribute('id', `#${nodeName}`);
-        node.textContent = content;
-        parent.appendChild(node);
-    }
-    return node;
-}
-
-const resetResults = (results) => {
-    while (results.firstChild) {
-        results.removeChild(results.firstChild);
-    }
-}
 const displayRoundResult = (result, playerSelection, computerSelection) => {
-
-    resetResults(document.querySelector('#results'));
     const results = document.querySelector('#results');
-    createNode('scoreTitle', 'h2', 'Score', results);
+    Helpers.clearNode(results);
+    Helpers.createNode('scoreTitle', 'h2', 'Score', results);
 
     // A paragraph to display round result
     let content = '';
@@ -47,17 +30,17 @@ const displayRoundResult = (result, playerSelection, computerSelection) => {
         content = `You lose the round! 
                    ${computerSelection} beats ${playerSelection}.`;
     }
-    createNode('roundResult', 'p', content, results);
+    Helpers.createNode('roundResult', 'p', content, results);
 
     // A paragraph to display round score
-    createNode('roundScore'
+    Helpers.createNode('roundScore'
         , 'p'
         , `Your score is ${playerScore}/5. 
            The computer's score is ${computerScore}/5.`
         , results);
 
     // A paragraph to display number of rounds played
-    createNode('roundCount'
+    Helpers.createNode('roundCount'
         , 'p'
         , `You played ${numberOfRounds} of 5 rounds.`
         , results)
@@ -96,7 +79,7 @@ const endGame = () => {
     } else {
         content = 'You lose the game! Better luck next time.';
     }
-    let finalScore = createNode('finalScore', 'p', content, results);
+    let finalScore = Helpers.createNode('finalScore', 'p', content, results);
     finalScore.style.color = 'red';
     finalScore.style.fontSize = '28px';
     // Disable choice buttons
@@ -112,7 +95,7 @@ document.querySelector('#newGame').addEventListener('click', () => {
     playerScore = 0;
     computerScore = 0;
     numberOfRounds = 0;
-    resetResults(document.querySelector('#results'));
+    Helpers.clearNode(document.querySelector('#results'));
     choices.forEach(choice => {
         document.querySelector(`#${choice}`).disabled = false;
     });
